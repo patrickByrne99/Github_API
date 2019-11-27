@@ -4,10 +4,13 @@ library(jsonlite)
 library(httpuv)
 #install.packages("httr")
 library(httr)
+#install.packages("plotly")
+require(devtools)
 library(plotly)
 
 # Can be github, linkedin etc depending on application
 oauth_endpoints("github")
+# Change based on what your application is
 
 # Change based on what you 
 myapp <- oauth_app(appname = "Access_Github",
@@ -31,102 +34,40 @@ json1 = content(req)
 gitDF = jsonlite::fromJSON(jsonlite::toJSON(json1))
 
 # Subset data.frame
-gitDF[gitDF$full_name == "patrickByrne99/Github_API", "created_at"] 
+gitDF[gitDF$full_name == "patrickByrne99/Github_API", "created_at"]
 
+#above code sourced from https://towardsdatascience.com/accessing-data-from-github-api-using-r-3633fb62cb08
 
-#Linking to my PlotLy Account
-Sys.setenv("plotly_username"="patrickByrne99")
-Sys.setenv("plotly_api_key"="Bm7lfs63dzZm5LdzvaQg")
+#Interrogate the Github API to extract data from my own github account
 
-#FUNCTIONS--------------------------------------------------------------------------------------
-#Number of followers
-#I assigned some frequently used strings variable names to make my code neater
-userslink = "https://api.github.com/users/"
-followerslink = "/followers"
-followinglink = "/following"
-perpagelink = "?per_page="
+#gets my data 
+myData = fromJSON("https://api.github.com/users/patrickByrne99")
 
-numFollowers = function(username)
-{
-  user = jsonlite::fromJSON(paste0(userslink, username))
-  
-  num_followers = user$followers
-  return(num_followers)
-}
+#displays number of followers
+myData$followers
 
-#A list of users followers
-followers = function(username)
-{
-  user = jsonlite::fromJSON(paste0(userslink, username, followerslink))
-  list = user$login
-  return(list)
-}
+followers = fromJSON("https://api.github.com/users/patrickByrne99/followers")
+followers$login #gives user names of all my followers
 
-#How many people the user is they Following? 
-numFollowing = function(username)
-{
-  user = jsonlite::fromJSON(paste0(userslink, username))
-  num_following = user$following
-  return(num_following)
-}
+myData$following #displays number of people I am following
 
-#List of above
-following = function(username)
-{
-  userfol = jsonlite::fromJSON(paste0(userslink, username, followinglink))
-  list = userfol$login
-  return(list)
-}
+following = fromJSON("https://api.github.com/users/patrickByrne99/following")
+following$login #gives the names of all the people i am following
 
-#Location
-location = function(username)
-{
-  user = jsonlite::fromJSON(paste0(userslink, username))
-  location = user$location
-  return(location)
-}
+myData$public_repos #displays the number of repositories I have
 
-#Account created
-dateCreated = function(username)
-{
-  user = jsonlite::fromJSON(paste0(userslink, username))
-  created = substring(toString(user$created_at), 1, 10)
-  return(created)
-}
+repos = fromJSON("https://api.github.com/users/patrickByrne99/repos")
+repos$name #Details of the names of my public repositories
+repos$created_at #Gives details of the date the repositories were created 
+repos$full_name #gives names of repositiories
 
-#Last activity
-lastActive = function(username)
-{
-  user = jsonlite::fromJSON(paste0(userslink, username))
-  updated = substring(toString(user$updated_at), 1, 10)
-  return(updated)
-}
+myData$bio #Displays my bio
 
-#Public Repositories Count
-numRepos = function(username)
-{
-  user = jsonlite::fromJSON(paste0(userslink, username))
-  num = user$public_repos
-  return(num)
-}
+lcaRepos <- fromJSON("https://api.github.com/repos/patrickByrne99/CS3012_LCA/commits")
+lcaRepos$commit$message #The details I included describing each commit to LCA assignment repository 
 
-#List of repositories
-listRepos = function(username)
-{
-  user = jsonlite::fromJSON(paste0(userslink, username))
-  list = jsonlite::fromJSON(user$repos_url)$name
-  
-  return(list)
-}
-
-#Languages of these repositories 
-listLanguages = function(username)
-{
-  user = jsonlite::fromJSON(paste0(userslink, username))
-  list = jsonlite::fromJSON(user$repos_url)$language
-  
-  
-  list = list[!is.na(list)]
-  return(list)
-}
-
+#Interrogate the Github API to extract data from another account by switching the username
+laurastack9Data = fromJSON("https://api.github.com/users/laurastack9")
+laurastack9Data$followers #lists the number of followers kennyc11 has
+laurastack9Data$following #lists the number of people kennyc11 is following
+laurastack9Data$public_repos #lists the number of repositories they have
