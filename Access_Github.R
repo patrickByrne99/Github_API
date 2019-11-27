@@ -156,4 +156,16 @@ for(i in 1:length(user_ids))
   }
   next
 }
+#Use plotly to graph
+Sys.setenv("plotly_username"="patrickByrne99")
+Sys.setenv("plotly_api_key"="Bm7lfs63dzZm5LdzvaQg")
+
+#plot one graphs repositories vs followers coloured by year
+plot1 = plot_ly(data = usersDB, x = ~repos, y = ~followers, text = ~paste("Followers: ", followers, "<br>Repositories: ", repos, "<br>Date Created:", dateCreated), color = ~dateCreated)
+plot1
+
+#sending first plot to plotly
+api_create(plot1, filename = "Repositories vs Followers")
+
+
 
