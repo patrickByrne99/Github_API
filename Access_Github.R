@@ -67,17 +67,17 @@ lcaRepos <- fromJSON("https://api.github.com/repos/patrickByrne99/CS3012_LCA/com
 lcaRepos$commit$message #The details I included describing each commit to LCA assignment repository 
 
 #Interrogate the Github API to extract data from another account by switching the username
-andrewData = fromJSON("https://api.github.com/users/laurastack9")
-andrewData$followers #lists the number of followers 
-andrewData$following #lists the number of following
-andrewData$public_repos #lists the number of repositories 
+egoistData = fromJSON("https://api.github.com/users/laurastack9")
+egoistData$followers #lists the number of followers 
+egoistData$following #lists the number of following
+egoistData$public_repos #lists the number of repositories 
 
 
 
 
 
 
-myData = GET("https://api.github.com/users/andrew/followers?per_page=100;", gtoken)
+myData = GET("https://api.github.com/users/egoist/followers?per_page=100;", gtoken)
 stop_for_status(myData)
 extract = content(myData)
 #converts into dataframe
