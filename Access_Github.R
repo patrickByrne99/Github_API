@@ -71,3 +71,48 @@ laurastack9Data = fromJSON("https://api.github.com/users/laurastack9")
 laurastack9Data$followers #lists the number of followers kennyc11 has
 laurastack9Data$following #lists the number of people kennyc11 is following
 laurastack9Data$public_repos #lists the number of repositories they have
+
+
+
+#i searched king in github to find the king of github
+#assumed whoever had the audasity to call themselves king would have an interesting account to back it up
+#user => king
+
+myData = GET("https://api.github.com/users/king/followers?per_page=100;", gtoken)
+stop_for_status(myData)
+extract = content(myData)
+#converts into dataframe
+githubDB = jsonlite::fromJSON(jsonlite::toJSON(extract))
+githubDB$login
+
+# Gets a list of usernames
+id = githubDB$login
+user_ids = c(id)
+
+# Makes empty vector and data.frame
+users = c()
+usersDB = data.frame(
+  username = integer(),
+  following = integer(),
+  followers = integer(),
+  repos = integer(),
+  dateCreated = integer()
+)
+
+#loops through users and adds to list
+for(i in 1:length(user_ids))
+{
+  
+  followingURL = paste("https://api.github.com/users/", user_ids[i], "/following", sep = "")
+  followingRequest = GET(followingURL, gtoken)
+  followingContent = content(followingRequest)
+  
+  #Leaves out users with 0 followers
+  if(length(followingContent) == 0)
+  {
+    next
+  }
+  
+  followingDF = jsonlite::fromJSON(jsonlite::toJSON(followingContent))
+  followingLogin = followingDF$login
+  
