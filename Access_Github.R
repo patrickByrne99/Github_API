@@ -192,6 +192,16 @@ for (i in 1:length(users))
     RepositoriesUrl2 = paste("https://api.github.com/repos/", users[i], "/", RepositoriesNames[j], sep = "")
     Repositories2 = GET(RepositoriesUrl2, gtoken)
     RepositoriesContent2 = content(Repositories2)
+    RepositoriesDF2 = jsonlite::fromJSON(jsonlite::toJSON(RepositoriesContent2))
+    language = RepositoriesDF2$language
     
-
+    #Removes repositories containing no specific languages
+    if (length(language) != 0 && language != "<NA>")
+    {
+      languages[length(languages)+1] = language
+    }
+    next
+  }
+  next
+}
 
